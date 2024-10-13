@@ -4,25 +4,23 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Models\FlashSale;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\File;
 
-class ProductController extends Controller
+class FlashSaleController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
-
-        confirmDelete('Hapus Data!', 'Apakah anda yakin ingin menghapus data ini ?');
-
-        return view('pages.admin.product.index', compact('products'));
+        $flashsales = FlashSale::all();
+        confirmDelete('Hapus Data!', 'Apakah anda yakin ingin menghapus data ini?');
+        return view('pages.admin.flashsale.index', compact('flashsales'));
     }
-
+    
     public function create()
     {
-        return view('pages.admin.product.create');
+        return view('pages.admin.flashsale.create');
     }
 
     public function store(Request $request)
@@ -46,7 +44,7 @@ class ProductController extends Controller
         $image->move('images/', $imageName);
     }
 
-    $product = Product::create([
+    $flashsales = FlashSale::create([
         'name' => $request->name,
         'price' => $request->price,
         'category' => $request->category,
@@ -54,9 +52,9 @@ class ProductController extends Controller
         'image' => isset($imageName) ? $imageName : null,
     ]);
 
-    if ($product) {
-        Alert::success('Berhasil!', 'Produk berhasil ditambahkan!');
-        return redirect()->route('admin.product');
+    if ($flashsales) {
+        Alert::success('Berhasil!', 'Flash Sale berhasil ditambahkan!');
+        return redirect()->route('admin.flashsale');
     } else {
         Alert::error('Gagal!', 'Produk gagal ditambahkan!');
         return redirect()->back();
@@ -65,16 +63,14 @@ class ProductController extends Controller
 
     public function detail($id)
     {
-        $product = Product::findOrFail($id);
-
-        return view('pages.admin.product.detail', compact('product'));
+        $flashsales = FlashSale::findOrFail($id);
+        return view('pages.admin.flashsale.detail', compact('flashsales'));
     }
 
     public function edit($id)
     {
-        $product = Product::findOrFail($id);
-
-        return view('pages.admin.product.edit', compact('product'));
+        $flashsales = FlashSale::findOrFail($id);
+        return view('pages.admin.flashsale.edit', compact('flashsales'));
     }
 
     public function update(Request $request, $id)
@@ -92,11 +88,11 @@ class ProductController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $product = Product::findOrFail($id);
+        $flashsales = FlashSale::findOrFail($id);
 
         // Handle file image if exists
         if ($request->hasFile('image')) {
-            $oldPath = public_path('images/' . $product->image);
+            $oldPath = public_path('images/' . $flashsales->image);
             if (File::exists($oldPath)) {
                 File::delete($oldPath);
             }
@@ -105,11 +101,11 @@ class ProductController extends Controller
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->move('images/', $imageName);
         } else {
-            $imageName = $product->image; // Keep the old image if no new one is uploaded
+            $imageName = $flashsales->image; // Keep the old image if no new one is uploaded
         }
 
         // Update product
-        $product->update([
+        $flashsales->update([
             'name' => $request->name,
             'price' => $request->price,
             'category' => $request->category,
@@ -117,32 +113,32 @@ class ProductController extends Controller
             'image' => $imageName,
         ]);
 
-        if ($product) {
-            Alert::success('Berhasil!', 'Produk berhasil diperbarui!');
-            return redirect()->route('admin.product');
+        if ($flashsales) {
+            Alert::success('Berhasil!', 'Flash Sale berhasil diperbarui!');
+            return redirect()->route('admin.flashsale');
         } else {
-            Alert::error('Gagal!', 'Produk gagal diperbarui!');
+            Alert::error('Gagal!', 'Flash Sale gagal diperbarui!');
             return redirect()->back();
         }
     }
 
     public function delete($id)
     {
-        $product = Product::findOrFail($id);
+        $flashsales = FlashSale::findOrFail($id);
 
-        $oldPath = public_path('images/' .$product->image);
+        $oldPath = public_path('images/' .$flashsales->image);
         if (File::exists($oldPath)) {
             File::delete($oldPath);
         }
 
-        $product->delete();
+        $flashsales->delete();
 
-        if ($product) {
-            Alert::success('Berhasil!', 'Produk berhasil dihapus!');
+        if ($flashsales) {
+            Alert::success('Berhasil!', 'Flash Sale berhasil dihapus!');
             return redirect()->back();
         } else {
-            Alert::error('Gagal!', 'Produk gagal dihapus!');
+            Alert::error('Gagal!', 'Flash Sale gagal dihapus!');
             return redirect()->back();
         }
     }
-};
+}

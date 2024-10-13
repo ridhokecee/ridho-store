@@ -10,7 +10,7 @@
                 <div class="breadcrumb-item">Distributor</div>
             </div>
         </div>
-        <a href="#" class="btn btn-icon icon-left btn-primary"><i class="fas fa-plus"></i> Tambah Distributor</a>
+        <a href="{{route('distributor.create')}}" class="btn btn-icon icon-left btn-primary"><i class="fas fa-plus"></i> Tambah Distributor</a>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered table-md">
@@ -40,9 +40,9 @@
                                 <td>{{ $distributor->created_at->format('d-m-Y H:i') }}</td>
                                 <td>{{ $distributor->updated_at->format('d-m-Y H:i') }}</td>
                                 <td>
-                                    <a href="#" class="badge badge-info">Detail</a>
-                                    <a href="#" class="badge badge-warning">Edit</a>
-                                    <a href="#" class="badge badge-danger">Hapus</a>
+                                    <a href="{{ route('distributor.detail', $distributor->id) }}" class="badge badge-info">Detail</a> 
+                                    <a href="{{ route('distributor.edit', $distributor->id) }}" class="badge badge-warning">Edit</a>
+                                    <a href="{{ route('distributor.delete', $distributor->id) }}" class="badge badge-danger"data-confirm-delete="true">Hapus</a>
                                 </td>
                             </tr>
                         @empty
